@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-# import everything from pypcl.py 
+# import everything from pypcl.py
 from pypcl import *
 from toolbox import *
 from hppcl import HpPclDocument

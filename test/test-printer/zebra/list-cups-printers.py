@@ -26,26 +26,28 @@ History:
   07 feb 2015 - Dominique - v 0.1 (first release). 
 							PrinterCupsAdapter roughly tested.
   
-""" 
+"""
 from pypcl import *
 from pypcl import PrinterCupsAdapter
 
 PRINTER_ENCODING = 'utf8'
 
-def list_cups_printer( ):
-	""" List the cups printer available on the system. """
-	
-	print( 'List CUPS printer' )
-	print( '-----------------' )
-	medium = PrinterCupsAdapter()
-	
-	medium.open() # Open the media for transmission
-	try:
-		medium.dump_printers()
-	finally:
-		medium.close()
-	
-	del( medium )
-    
+
+def list_cups_printer():
+    """ List the cups printer available on the system. """
+
+    print('List CUPS printer')
+    print('-----------------')
+    medium = PrinterCupsAdapter()
+
+    medium.open()  # Open the media for transmission
+    try:
+        medium.dump_printers()
+    finally:
+        medium.close()
+
+    del (medium)
+
+
 if __name__ == '__main__':
-	list_cups_printer()
+    list_cups_printer()
