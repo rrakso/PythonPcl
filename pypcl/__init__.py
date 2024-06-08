@@ -10,3 +10,5 @@ from .zpl import ZplDocument
 from .adserial import PrinterSerialAdapter
 from .adsocket import PrinterSocketAdapter
 from .adcups import PrinterCupsAdapter
+from .exceptions import *
+from .adusb import PrinterUsbAdapter
