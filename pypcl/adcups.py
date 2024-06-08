@@ -14,8 +14,7 @@ Please, contact us at <info@mchobby.be>
 History:
   08 feb 2015 - Dominique - v 0.1 create.
 """
-from pypcl import *
-import encodings
+from .pypcl import *
 import cups
 import tempfile
 
@@ -62,7 +61,7 @@ class PrinterCupsAdapter(PrinterAdapter):
         """ Just print the list of printer queue available on the computer """
         printers = self.printers
         for printer in printers:
-            print printer, printers[printer]["device-uri"]
+            print(printer, printers[printer]["device-uri"])
 
     def open(self):
         """ open the CUPS link """

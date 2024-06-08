@@ -19,7 +19,7 @@ History:
   01 feb 2015 - Dominique - v 0.1 (première release)
   05 feb 2015 - Dominique - Changing structure of PRINTER_SYMBOL_SET
 """
-from pypcl import PclDocument, PyPclError, PCL_DATA_TYPE
+from .pypcl import PclDocument, PyPclError, PCL_DATA_TYPE
 
 
 class HpPclDocument(PclDocument):
@@ -288,7 +288,7 @@ class HpPclDocument(PclDocument):
 
         assert isinstance(typeface_name, str), 'typeface must be a string'
         assert typeface_name in self.PRINTER_TYPEFACE.keys(
-        ), 'invalid typeface name %s' % typeface
+        ), 'invalid typeface name %s' % typeface_name
 
         self.write_esc(u'(s%iT' % self.PRINTER_TYPEFACE[typeface_name])
 

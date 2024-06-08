@@ -40,7 +40,7 @@ def print_ean13_doc():
     # 3232 is used for belgian courrier, let say the following '1' to identify product and 576 for id_product
     ean_base = '323210000576'
     ean13 = calculate_ean13(ean_base)
-    print ean13
+    print(ean13)
 
     print('Print the EAN13 ZPL document')
     print('----------------------------')
@@ -54,7 +54,7 @@ def print_ean13_doc():
     # Write a BarCode field
     d.field(origin=(120, 11), font=d.font('E'), data=u'RASPBERRY.')
     d.field(origin=(120, 42), font=d.font('E'), data=u'Pi.2......')
-    d.ean13(origin=(130, 80), ean=unicode(ean13), height_dots=50)
+    d.ean13(origin=(130, 80), ean=ean13, height_dots=50)
 
     d.field(origin=(140, 160), font=d.font('C'), data=u'MC Hobby sprl')
     d.field(origin=(130, 180), font=d.font('C'), data=u'shop.mchobby.be')

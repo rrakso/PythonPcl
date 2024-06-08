@@ -19,7 +19,7 @@ History:
   07 feb 2015 - Dominique - v 0.1 (première release)
 """
 
-from pypcl import *
+from .pypcl import *
 
 
 class ZplDocument(PclDocument):
@@ -170,7 +170,7 @@ class ZplDocument(PclDocument):
             origin) == 2, "origin must be a tuple (x-dots,y-dots)"
         assert isinstance(origin[0], int) and isinstance(
             origin[1], int), "origin must contains integers values"
-        assert isinstance(data, unicode), "Data must be unicode string"
+        assert isinstance(data, str), "Data must be unicode string"
         assert isinstance(height_dots, int), "height_dots must be an interger"
 
         self.field_origin(origin)
@@ -185,7 +185,7 @@ class ZplDocument(PclDocument):
             origin) == 2, "origin must be a tuple (x-dots,y-dots)"
         assert isinstance(origin[0], int) and isinstance(
             origin[1], int), "origin must contains integers values"
-        assert isinstance(ean, unicode), "Data must be unicode string"
+        assert isinstance(ean, str), "Data must be unicode string"
         assert (len(ean) == 13) and (
             ean.isdigit()), "ean must have 13 digits only"
         assert isinstance(height_dots, int), "height_dots must be an integer"
@@ -256,7 +256,7 @@ class ZplDocument(PclDocument):
         assert ((font_height_dots == None) or isinstance(font_height_dots, int)) and (
             (font_width_dots == None) or isinstance(font_width_dots, int)), "height and width must be integers"
         assert font_code in self.PRINTER_FONT, "invalid font %s, not in PRINTER_FONT %s" % (
-            bfont_code, self.PRINTER_FONT.keys())
+            font_code, self.PRINTER_FONT.keys())
         # assert (font_height_dots == None) or (18 <= font_height_dots <= 180), "height must be in between 18..180"
         # assert (font_width_dots == None) or (10 <= font_width_dots <= 100), "width must be in between 10..100"
 
@@ -280,7 +280,7 @@ class ZplDocument(PclDocument):
     def field_data(self, data):
         """ just send the data of the field. Should be followed by field
         separator """
-        assert isinstance(data, unicode), 'Data must be unicode'
+        assert isinstance(data, str), 'Data must be unicode string'
 
         self.writeln(u'^FD%s' % data)
 

@@ -37,8 +37,8 @@ Licence: This specific file applies the licence as original code.
 History:
   05 feb 2015 - Dominique - create from BarCode39.PRG (clipper)
 """
-from hppcl import HpPclDocument
-from pypcl import PyPclError
+from .hppcl import HpPclDocument
+from .pypcl import PyPclError
 
 
 class Barcode39Error(PyPclError):
@@ -173,7 +173,7 @@ class Barcode39(object):
         Example:
         print( code_to_sequences( u'MCHP00157' )  """
 
-        assert isinstance(ucode, unicode), 'ucode must be unicode string!'
+        assert isinstance(ucode, str), 'ucode must be unicode string!'
 
         for uchar in ucode:
             if not (uchar in self._char39):
@@ -190,7 +190,7 @@ class Barcode39(object):
         """ write the barcode corresponding to ucode in the ower document.
         Do not include the header and trailing * in the ucode!"""
         assert isinstance(
-            ucode, unicode), "the code to compute in barcode must be a unicode string"
+            ucode, str), "the code to compute in barcode must be a unicode string"
 
         # code barre message must starts and finish with *
         ucode = u'*%s*' % ucode.strip()
@@ -209,7 +209,7 @@ class Barcode39(object):
 
         Do not include the header and trailing * in the ucode!"""
         assert isinstance(
-            ucode, unicode), "the code to compute in barcode must be a unicode string"
+            ucode, str), "the code to compute in barcode must be a unicode string"
 
         for uchar in ucode:
             if not (uchar in self._char39):

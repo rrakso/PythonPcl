@@ -5,3 +5,11 @@ pushgit.sh
 # Gimp files
 *.xcf
 
+# Virtual environment
+.env/
+
+# Created by distutils as described in PEP 376 (https://peps.python.org/pep-0376/). 
+*.egg-info/
+
+# Build files
+dist/
