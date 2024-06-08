@@ -62,7 +62,8 @@ class ZplDocument(PclDocument):
                     'S': None,
                     'T': None,  # Use 17, 8 as size for a nice Bold effect
                     'U': None,
-                    'V': None}
+                    'V': None,
+                    '0': None}
 
     PRINTER_ORIENTATION_NORMAL = 'N'
     PRINTER_ORIENTATION_ROTATED = 'R'  # rotated 90 degrees (clockwise)
@@ -71,6 +72,14 @@ class ZplDocument(PclDocument):
 
     PRINTER_ORIENTATION = [PRINTER_ORIENTATION_NORMAL, PRINTER_ORIENTATION_ROTATED,
                            PRINTER_ORIENTATION_INVERTED, PRINTER_ORIENTATION_BOTTOMUP]
+
+    PRINTER_TEXT_JUSTIFICATION_LEFT = 'L'  # text will be left-justified left
+    PRINTER_TEXT_JUSTIFICATION_CENTER = 'C'  # text will be centered
+    PRINTER_TEXT_JUSTIFICATION_RIGHT = 'R'  # text will be right-justified
+    PRINTER_TEXT_JUSTIFICATION_JUSTIFIED = 'J'  # text will be justified
+
+    PRINTER_TEXT_JUSTIFICATION = [PRINTER_TEXT_JUSTIFICATION_LEFT, PRINTER_TEXT_JUSTIFICATION_CENTER,
+                                  PRINTER_TEXT_JUSTIFICATION_RIGHT, PRINTER_TEXT_JUSTIFICATION_JUSTIFIED]
 
     PRINT_MODE_TEAR_OFF = 'T'
     PRINT_MODE_PEEL_OFF = 'P'
@@ -144,23 +153,32 @@ class ZplDocument(PclDocument):
 
         self.writeln(u'^LH%s,%s' % (x_dots, y_dots))
 
-    def format_start(self):
+    def format_start(self, encoding=None):
         self.writeln(u'^XA')
+        if encoding == None:
+            encoding = self.target_encoding
+        if encoding == 'UTF-8':
+            self.writeln(u'^CI28')
 
     def format_end(self):
         self.writeln(u'^XZ')
 
-    def field(self, origin, font, data):
+    def field(self, origin, font, block=None, data=''):
         """ allows to write a field data in one shot
 
         origin (tuple) = (x_position_dots, y_position_dots). (50,50) or (50,100) for 1.25" x 1" label on LP 2824.
-        font (tuple) = (font_type, font_height_dots, font_width_dots ). See definition of field_font() for more info.
+        font (tuple) = (font_type, font_height_dots, font_width_dots, font_orientation ). See definition of field_font() for more info. 
+        block (tuble) = (block_width, max_lines, space_between_lines, text_justification). See definition of field_block() for more info. 
         data (unicode) = Data to print out. """
 
         self.field_origin(origin)
         if font != None:
             # font type, font width dot, font height dots
             self.field_font(font)
+        if block != None:
+            # block_width, max_lines, space_between_lines, text_justification
+            self.field_block(block_width=block[0], max_lines=block[1],
+                             space_between_lines=block[2], text_justification=block[3])
         self.field_data(data)
         self.field_separator()
 
@@ -176,6 +194,22 @@ class ZplDocument(PclDocument):
         self.field_origin(origin)
         self.field_barcode39(
             ZplDocument.PRINTER_ORIENTATION_NORMAL, False, height_dots, True, False)
+        self.field_data(data)
+        self.field_separator()
+
+    def qrcode(self, origin, data, magnification=6):
+        """ allows to draw a QR code on the label """
+        assert isinstance(origin, tuple) and len(
+            origin) == 2, "origin must be a tuple (x-dots,y-dots)"
+        assert isinstance(origin[0], int) and isinstance(
+            origin[1], int), "origin must contains integers values"
+        assert isinstance(data, str), "Data must be unicode string"
+        assert isinstance(
+            magnification, int), "height_dots must be an interger"
+
+        self.field_origin(origin)
+        self.field_qrcode(ZplDocument.PRINTER_ORIENTATION_NORMAL,
+                          2, magnification, 'Q', 7)
         self.field_data(data)
         self.field_separator()
 
@@ -205,6 +239,20 @@ class ZplDocument(PclDocument):
 
         self.write(u'^FO%i,%i' % origin)
 
+    def field_block(self, block_width=200, max_lines=1, space_between_lines=0,  text_justification=PRINTER_TEXT_JUSTIFICATION_LEFT):
+        """ The ^FB command allows you to print text into a defined block type format. This command formats an ^FD or ^SN string into a block of text using the origin, font, and rotation specified for the text string. The ^FB command also contains an automatic word-wrap function. """
+        assert isinstance(
+            block_width, int) and block_width > 0, "block width should be greater than 0, otherwise text does not print"
+        assert isinstance(
+            max_lines, int) and max_lines >= 1 and max_lines <= 9999, "the number of lines should be in the range of 1 to 9999"
+        assert isinstance(space_between_lines, int) and space_between_lines >= - \
+            9999 and max_lines <= 9999, "space between lines should be in the range of -9999 to 9999"
+        assert text_justification in self.PRINTER_TEXT_JUSTIFICATION, "Invalid text justification %s not in range %s" % (
+            text_justification, self.PRINTER_TEXT_JUSTIFICATION.keys())
+
+        self.write(u'^FB%i,%i,%i,%s' % (block_width, max_lines,
+                                        space_between_lines, text_justification))
+
     def field_barcode39(self, orientation=PRINTER_ORIENTATION_NORMAL, mod43_checksum=False, height_dots=50, interpretation_line=True, interpretation_above=False):
         """ Write a field entry for barcode 39. Data must be send into a field_data() """
         assert orientation in self.PRINTER_ORIENTATION, "Invalid orientation %s not in range %s" % (
@@ -212,6 +260,14 @@ class ZplDocument(PclDocument):
 
         self.write(u'^B3%s,%s,%i,%s,%s' % (orientation, 'Y' if mod43_checksum else 'N',
                    height_dots, 'Y' if interpretation_line else 'N', 'Y' if interpretation_above else 'N'))
+
+    def field_qrcode(self, orientation=PRINTER_ORIENTATION_NORMAL, model=2, magnification=6, reliability_level='Q', nabk=7):
+        """ Write a field entry for QR code. Data must be send into a field_data() """
+        assert orientation in self.PRINTER_ORIENTATION, "Invalid orientation %s not in range %s" % (
+            orientation, self.PRINTER_ORIENTATION.keys())
+
+        self.write(u'^BQ%s,%i,%i,%s,%i' %
+                   (orientation, model, magnification, reliability_level, nabk))
 
     def field_ean13(self, orientation=PRINTER_ORIENTATION_NORMAL, height_dots=50, interpretation_line=True, interpretation_above=False):
         assert orientation in self.PRINTER_ORIENTATION, "Invalid orientation %s not in range %s" % (
@@ -230,16 +286,16 @@ class ZplDocument(PclDocument):
                                    You can use the function font() to create the tuple.
         """
         assert isinstance(font, tuple) and len(
-            font) == 3, "font must be a tuple (font-code,height-dots,width-dots)"
+            font) == 4, "font must be a tuple (font-code,height-dots,width-dots)"
         assert isinstance(font[0], str), "font code must be str"
         assert font[0] in self.PRINTER_FONT, "invalid font %s" % font[0]
-        assert isinstance(font[1], int) and isinstance(
-            font[2], int), "font height and width must contains integers values"
+        assert isinstance(font[2], int) and isinstance(
+            font[3], int), "font height and width must contains integers values"
 
-        self.write(u'^A%sN,%i,%i' % font)
+        self.write(u'^A%s%s,%i,%i' % font)
 
-    def font(self, font_code, font_height_dots=None, font_width_dots=None):
-        """ Create a font tuple for field_font().
+    def font(self, font_code, font_height_dots=None, font_width_dots=None, font_orientation=PRINTER_ORIENTATION_NORMAL):
+        """ Create a font tuple for field_font(). 
 
         It is better to use this function because we could improve font
         support in the future ;-)
@@ -275,7 +331,16 @@ class ZplDocument(PclDocument):
                 # PRINTER_FONT[font_code][0] -> first tuple item => (default_height,default_width)
                 font_width_dots = self.PRINTER_FONT[font_code][0][1]
 
-        return (font_code, font_height_dots, font_width_dots)
+        return (font_code, font_orientation, font_height_dots, font_width_dots)
+
+    def useNewFont(self, newFontCode, fontName):
+        """ Writes a command that sets new font, until printer will be turnded off. 
+        Example command: ^CWQ,E:TT0003M_.FNT"""
+        assert isinstance(newFontCode, str), "font code must be str"
+        assert isinstance(fontName, str), "font name must be str"
+        if not newFontCode in self.PRINTER_FONT:
+            self.PRINTER_FONT[newFontCode] = None
+        self.write(u'^CW%s,%s' % (newFontCode, fontName))
 
     def field_data(self, data):
         """ just send the data of the field. Should be followed by field
