@@ -6,48 +6,51 @@ Print MULTIPLE QUANTITY of a document with EAN13 on the Zebra Label Printer.
 BarCode39 bar codes can contains alphanumeric content.
 
 We do expect to find the "zebra-raw" CUPS printer queue.
-  
+
 if you are using a Zebra USB printer on a Linux Machine, you should
-have a look to list-cups-printer.py to identify the available 
+have a look to list-cups-printer.py to identify the available
 CUPS printers
 
 Copyright 2015 DMeurisse <info@mchobby.be> MC Hobby SPRL
 
-Licence: CC-BY-SA-NC 
+Licence: CC-BY-SA-NC
 
 Cannot be reused for commercial product without agreement.
-Please, contact us at <info@mchobby.be> 
+Please, contact us at <info@mchobby.be>
 
 ------------------------------------------------------------------------
 History:
-  09 feb 2015 - Dominique - v 0.1 (first release). 
+  09 feb 2015 - Dominique - v 0.1 (first release).
 """
 from pypcl import *
 from pypcl import PrinterCupsAdapter
 from pypcl import ZplDocument
 from pypcl import calculate_ean13
 
-PRINTER_ENCODING = 'cp850'
+PRINTER_ENCODING = "cp850"
 # You have to add your Zebra as Generic > Raw printer in cups.
-PRINTER_QUEUE_NAME = 'zebra-raw'
+PRINTER_QUEUE_NAME = "zebra-raw"
 # PRINTER_QUEUE_NAME is the shortname of the printer
 # in CUPS
 PRINTER_QUANTITY = 2
 
 
 def print_quantity_doc():
-    """ Print the ean13 document IN MULTIPLE QUANTITY on Zebra. """
+    """Print the ean13 document IN MULTIPLE QUANTITY on Zebra."""
 
     # 3232 is used for belgian courrier, let say the following '1' to identify product and 576 for id_product
-    ean_base = '323210000576'
+    ean_base = "323210000576"
     ean13 = calculate_ean13(ean_base)
     print(ean13)
 
-    print('Print the EAN13 (%02i) ZPL document' % PRINTER_QUANTITY)
-    print('----------------------------------')
+    print("Print the EAN13 (%02i) ZPL document" % PRINTER_QUANTITY)
+    print("----------------------------------")
     medium = PrinterCupsAdapter(printer_queue_name=PRINTER_QUEUE_NAME)
-    d = ZplDocument(target_encoding=PRINTER_ENCODING, printer_adapter=medium,
-                    title='Barcode doc x %i' % PRINTER_QUANTITY)
+    d = ZplDocument(
+        target_encoding=PRINTER_ENCODING,
+        printer_adapter=medium,
+        title="Barcode doc x %i" % PRINTER_QUANTITY,
+    )
 
     # Start a Print format
     d.format_start()
@@ -56,12 +59,12 @@ def print_quantity_doc():
     d.print_quantity(PRINTER_QUANTITY)
 
     # Write a BarCode field
-    d.field(origin=(120, 11), font=d.font('E'), data=u'RASPBERRY.')
-    d.field(origin=(120, 42), font=d.font('E'), data=u'Pi.2......')
+    d.field(origin=(120, 11), font=d.font("E"), data="RASPBERRY.")
+    d.field(origin=(120, 42), font=d.font("E"), data="Pi.2......")
     d.ean13(origin=(130, 80), ean=ean13, height_dots=50)
 
-    d.field(origin=(140, 160), font=d.font('C'), data=u'MC Hobby sprl')
-    d.field(origin=(130, 180), font=d.font('C'), data=u'shop.mchobby.be')
+    d.field(origin=(140, 160), font=d.font("C"), data="MC Hobby sprl")
+    d.field(origin=(130, 180), font=d.font("C"), data="shop.mchobby.be")
     # End Print format
     d.format_end()
 
@@ -74,8 +77,8 @@ def print_quantity_doc():
     finally:
         medium.close()
 
-    del (medium)
+    del medium
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_quantity_doc()

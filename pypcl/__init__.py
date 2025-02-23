@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-# import everything from pypcl.py 
+# import everything from pypcl.py
 from pypcl.pypcl import *
 from pypcl.toolbox import *
 from pypcl.exceptions import *

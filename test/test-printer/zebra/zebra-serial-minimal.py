@@ -3,8 +3,8 @@
 """Zebra-serial-minimal.py
 
 Test the minimal document printing on a USB-SERIAL HP Printer
-*** WHEN CUPS IS NOT INSTALLED!!! ***. 
-  
+*** WHEN CUPS IS NOT INSTALLED!!! ***.
+
 if you are using a Zebra USB printer on a Linux Machine, you should
 have a look to zebra-cups-minimal.py
 
@@ -13,47 +13,46 @@ where you will learn lots of things.
 
 Copyright 2015 DMeurisse <info@mchobby.be> MC Hobby SPRL
 
-Licence: CC-BY-SA-NC 
+Licence: CC-BY-SA-NC
 
 Cannot be reused for commercial product without agreement.
-Please, contact us at <info@mchobby.be> 
+Please, contact us at <info@mchobby.be>
 
 ------------------------------------------------------------------------
 History:
-  07 feb 2015 - Dominique - v 0.1 (first release). 
-							PrinterSerialAdapter roughly tested.
-  
+  07 feb 2015 - Dominique - v 0.1 (first release).
+                                                        PrinterSerialAdapter roughly tested.
+
 """
 from pypcl import *
 from pypcl import ZplDocument
 from pypcl import PrinterSerialAdapter
 
-PRINTER_DEVICE = '/dev/usb/lp0'
+PRINTER_DEVICE = "/dev/usb/lp0"
 PRINTER_BAUD = 9600
-PRINTER_ENCODING = 'cp850'
+PRINTER_ENCODING = "cp850"
 
 
 def print_minimal_doc(printer_device, printer_baud):
-    """ Generate the mininal ZPL document and print it on USB-Serial printer.
+    """Generate the mininal ZPL document and print it on USB-Serial printer.
 
     parameters:
             printer_serial : tuple (PRINTER_SERIAL, PRINTER_BAUD). On which
                                              serial port to print.
     """
 
-    print('Minimal ZPL Document printing')
-    print('-----------------------------')
-    print('Printer Serial: %s\nPrinter Baud: %i' %
-          (printer_device, printer_baud))
+    print("Minimal ZPL Document printing")
+    print("-----------------------------")
+    print("Printer Serial: %s\nPrinter Baud: %i" % (printer_device, printer_baud))
     medium = PrinterSerialAdapter(printer_device, printer_baud)
 
     # Very simple printout + usual initialization commands
-    d = ZplDocument('cp850', medium)
+    d = ZplDocument("cp850", medium)
 
     # d.reset_printer() # PCL to reset the printer
 
-    d.writeln(u'First')
-    d.writeln(u'Ticket')
+    d.writeln("First")
+    d.writeln("Ticket")
 
     medium.open()  # Open the media for transmission
     try:
@@ -61,9 +60,9 @@ def print_minimal_doc(printer_device, printer_baud):
     finally:
         medium.close()
 
-    del (d)
-    del (medium)
+    del d
+    del medium
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_minimal_doc(PRINTER_DEVICE, PRINTER_BAUD)

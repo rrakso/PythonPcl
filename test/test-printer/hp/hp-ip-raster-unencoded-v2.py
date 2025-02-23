@@ -8,15 +8,15 @@ This sample use no compression method.
 *** THIS EXAMPLE USE RASTER METHOD DEFINED ON THE HpPclDocument ***
 
 This method can allow you to easily improve the design of document
-content BUT required the usage of the PCL Symbol Set "PC-850 multilingual" 
-sheet.  
-  
+content BUT required the usage of the PCL Symbol Set "PC-850 multilingual"
+sheet.
+
 Copyright 2015 DMeurisse <info@mchobby.be> MC Hobby SPRL
 
-Licence: CC-BY-SA-NC 
+Licence: CC-BY-SA-NC
 
 Cannot be reused for commercial product without agreement.
-Please, contact us at <info@mchobby.be> 
+Please, contact us at <info@mchobby.be>
 
 ------------------------------------------------------------------------
 History:
@@ -25,13 +25,13 @@ History:
 from pypcl import *
 from pypcl import HpPclDocument
 
-PRINTER_IP = '192.168.1.206'
+PRINTER_IP = "192.168.1.206"
 PRINTER_PORT = 9100
-PRINTER_ENCODING = 'cp850'
+PRINTER_ENCODING = "cp850"
 
 
 def print_raster_graphic_unencoded(printer_socket):
-    """ Generate the PCL document containg a raw graphic image.
+    """Generate the PCL document containg a raw graphic image.
         This sample is a basic implementation injecting raw esc sequences
 
     parameters:
@@ -39,20 +39,20 @@ def print_raster_graphic_unencoded(printer_socket):
                                              socket to print.
     """
 
-    print('Minimal Raster Graphic printing')
-    print('-------------------------------')
-    print('Printer IP: %s\nPrinter Port: %i' % printer_socket)
+    print("Minimal Raster Graphic printing")
+    print("-------------------------------")
+    print("Printer IP: %s\nPrinter Port: %i" % printer_socket)
     medium = PrinterSocketAdapter(printer_socket)
 
     # Very simple printout + usual initialization commands
-    d = HpPclDocument('cp850', medium)
+    d = HpPclDocument("cp850", medium)
     d.reset_printer()  # PCL to reset the printer
 
-    d.write(u'Raster Graphic Test')
-# Move the cursor to PCL unit position (300,400) within the PCL
-# coordinate system
-#   x-position: 300 unit @ 300 dot/inch --> 1 inch --> 2.54cm
-#   y-position: 400 unit @ 300 dot/inch --> 1.33 inch --> 3.38cm
+    d.write("Raster Graphic Test")
+    # Move the cursor to PCL unit position (300,400) within the PCL
+    # coordinate system
+    #   x-position: 300 unit @ 300 dot/inch --> 1 inch --> 2.54cm
+    #   y-position: 400 unit @ 300 dot/inch --> 1.33 inch --> 3.38cm
     d.cursor_move((300, 400))
 
     # Set the Raster Graphics resolution (75 dpi)
@@ -81,23 +81,27 @@ def print_raster_graphic_unencoded(printer_socket):
     # Print the image, stored as list of bit (encoded into string for
     # easy code writing, use a space every 8 bits for reading,
     # the code space are ignored)
-    d.raster_senddata_str(['00000000 00000000 10000000 00000000',
-                           '01100110 00000000 11000000 00000000',
-                           '00100010 01000000 11100000 00000000',
-                           '10000000 10000000 11110000 00000000',
-                           '01111111 00000000 11111000 0000000'])
+    d.raster_senddata_str(
+        [
+            "00000000 00000000 10000000 00000000",
+            "01100110 00000000 11000000 00000000",
+            "00100010 01000000 11100000 00000000",
+            "10000000 10000000 11110000 00000000",
+            "01111111 00000000 11111000 0000000",
+        ]
+    )
 
     # End Raster Graphic
     d.raster_end_graphic()
 
     # Move to position
-# Move the cursor to PCL unit position (300,400) within the PCL
-# coordinate system
-#    This example use the 300 dots/inch as refernce for coordonate
-#    y-pos = under the raster --> 4 cm --> 1.57 inch @ 300 dot/inch --> 472 dots
+    # Move the cursor to PCL unit position (300,400) within the PCL
+    # coordinate system
+    #    This example use the 300 dots/inch as refernce for coordonate
+    #    y-pos = under the raster --> 4 cm --> 1.57 inch @ 300 dot/inch --> 472 dots
     d.cursor_move((300, 472))
 
-    d.writeln(u'End of test')
+    d.writeln("End of test")
 
     medium.open()  # Open the media for transmission
     try:
@@ -105,9 +109,9 @@ def print_raster_graphic_unencoded(printer_socket):
     finally:
         medium.close()
 
-    del (d)
-    del (medium)
+    del d
+    del medium
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_raster_graphic_unencoded((PRINTER_IP, PRINTER_PORT))

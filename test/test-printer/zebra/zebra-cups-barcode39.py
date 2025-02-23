@@ -6,41 +6,42 @@ Print a document with BARCODE39 on the Zebra Label Printer.
 BarCode39 bar codes can contains alphanumeric content.
 
 We do expect to find the "zebra-raw" CUPS printer queue.
-  
+
 if you are using a Zebra USB printer on a Linux Machine, you should
-have a look to list-cups-printer.py to identify the available 
+have a look to list-cups-printer.py to identify the available
 CUPS printers
 
 Copyright 2015 DMeurisse <info@mchobby.be> MC Hobby SPRL
 
-Licence: CC-BY-SA-NC 
+Licence: CC-BY-SA-NC
 
 Cannot be reused for commercial product without agreement.
-Please, contact us at <info@mchobby.be> 
+Please, contact us at <info@mchobby.be>
 
 ------------------------------------------------------------------------
 History:
-  09 feb 2015 - Dominique - v 0.1 (first release). 
+  09 feb 2015 - Dominique - v 0.1 (first release).
 """
 from pypcl import *
 from pypcl import PrinterCupsAdapter
 from pypcl import ZplDocument
 
-PRINTER_ENCODING = 'cp850'
+PRINTER_ENCODING = "cp850"
 # You have to add your Zebra as Generic > Raw printer in cups.
-PRINTER_QUEUE_NAME = 'zebra-raw'
+PRINTER_QUEUE_NAME = "zebra-raw"
 # PRINTER_QUEUE_NAME is the shortname of the printer
 # in CUPS
 
 
 def print_barcode39_doc():
-    """ Print the Barcode39 document on Zebra. """
+    """Print the Barcode39 document on Zebra."""
 
-    print('Print the Barcode39 ZPL document')
-    print('--------------------------------')
+    print("Print the Barcode39 ZPL document")
+    print("--------------------------------")
     medium = PrinterCupsAdapter(printer_queue_name=PRINTER_QUEUE_NAME)
-    d = ZplDocument(target_encoding=PRINTER_ENCODING,
-                    printer_adapter=medium, title='Barcode doc')
+    d = ZplDocument(
+        target_encoding=PRINTER_ENCODING, printer_adapter=medium, title="Barcode doc"
+    )
 
     # Start a Print format
     d.format_start()
@@ -49,12 +50,12 @@ def print_barcode39_doc():
     # d.field( origin=(100,80), font=d.font('C'), data=u'Fun electronic hacking' )
 
     # Write a BarCode field
-    d.field(origin=(120, 11), font=d.font('E'), data=u'RASPBERRY.')
-    d.field(origin=(120, 42), font=d.font('E'), data=u'Pi.2......')
-    d.barcode39(origin=(110, 80), data=u'P0576', height_dots=50)
+    d.field(origin=(120, 11), font=d.font("E"), data="RASPBERRY.")
+    d.field(origin=(120, 42), font=d.font("E"), data="Pi.2......")
+    d.barcode39(origin=(110, 80), data="P0576", height_dots=50)
 
-    d.field(origin=(140, 160), font=d.font('C'), data=u'MC Hobby sprl')
-    d.field(origin=(130, 180), font=d.font('C'), data=u'shop.mchobby.be')
+    d.field(origin=(140, 160), font=d.font("C"), data="MC Hobby sprl")
+    d.field(origin=(130, 180), font=d.font("C"), data="shop.mchobby.be")
     # End Print format
     d.format_end()
 
@@ -67,8 +68,8 @@ def print_barcode39_doc():
     finally:
         medium.close()
 
-    del (medium)
+    del medium
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_barcode39_doc()

@@ -1,5 +1,5 @@
 #  -*- coding: utf-8 -*-
-""" PythonPCL Exceptions classes
+"""PythonPCL Exceptions classes
 
 Result/Exit codes:
 
@@ -13,7 +13,7 @@ Result/Exit codes:
 
 
 class Error(Exception):
-    """ Base class for PythonPCL errors """
+    """Base class for PythonPCL errors"""
 
     def __init__(self, msg, status=None):
         super().__init__(self)
@@ -27,7 +27,7 @@ class Error(Exception):
 
 
 class USBNotFoundError(Error):
-    """ Device wasn't found (probably not plugged in)
+    """Device wasn't found (probably not plugged in)
 
     The USB device seems to be not plugged in.
     Ths returncode for this exception is `90`.

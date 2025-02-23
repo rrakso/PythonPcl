@@ -7,15 +7,18 @@ Copyright 2024 Oskar Jaskólski <oskarrro90@gmail.com>
 
 Licence: CC-BY-SA-NC
 """
+
 from . import *
 import usb.core
 import usb.util
 
 
 class PrinterUsbAdapter(PrinterAdapter):
-    """ Used to send the print stream over an USB connection. """
+    """Used to send the print stream over an USB connection."""
 
-    def __init__(self, idVendor, idProduct, usb_args=None, timeout=0, in_ep=0x82, out_ep=0x01):
+    def __init__(
+        self, idVendor, idProduct, usb_args=None, timeout=0, in_ep=0x82, out_ep=0x01
+    ):
         """
         :param idVendor: Vendor ID
         :param idProduct: Product ID
@@ -34,20 +37,21 @@ class PrinterUsbAdapter(PrinterAdapter):
 
         self.usb_args = usb_args or {}
         if idVendor:
-            self.usb_args['idVendor'] = idVendor
+            self.usb_args["idVendor"] = idVendor
         if idProduct:
-            self.usb_args['idProduct'] = idProduct
+            self.usb_args["idProduct"] = idProduct
 
     @property
     def printer_socket(self):
         return self.__printer_socket
 
     def open(self):
-        """ Search device on USB tree and set it to be used to stream the data over USB. """
+        """Search device on USB tree and set it to be used to stream the data over USB."""
         self.device = usb.core.find(**self.usb_args)
         if self.device is None:
             raise USBNotFoundError(
-                f"Device {self.device} not found or cable not plugged in.")
+                f"Device {self.device} not found or cable not plugged in."
+            )
 
         self.idVendor = self.device.idVendor
         self.idProduct = self.device.idProduct
@@ -75,7 +79,7 @@ class PrinterUsbAdapter(PrinterAdapter):
         PrinterAdapter.open(self)
 
     def close(self):
-        """ Release USB interface """
+        """Release USB interface"""
         if self.device:
             usb.util.dispose_resources(self.device)
         self.device = None
@@ -84,11 +88,11 @@ class PrinterUsbAdapter(PrinterAdapter):
         PrinterAdapter.close(self)
 
     def get(self):
-        """ Reads a data buffer and returns it. """
+        """Reads a data buffer and returns it."""
         return self.device.read(self.in_ep, 16)
 
     def send(self, bytes_to_send):
-        """ User did call send on the PclDocument. We have to 
+        """User did call send on the PclDocument. We have to
         send the bytes of the document
 
         :param bytes_to_send: arbitrary data to be printed

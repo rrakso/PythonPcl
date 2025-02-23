@@ -2,15 +2,15 @@
 # -*- coding: utf8 -*-
 """hp-ip-minimal.py
 
-  Generate the PCL document printing a same line with various 
+  Generate the PCL document printing a same line with various
   font and style. Test on a NETWORKED HP Printer.
-		  
+
 Copyright 2015 DMeurisse <info@mchobby.be> MC Hobby SPRL
 
-Licence: CC-BY-SA-NC 
+Licence: CC-BY-SA-NC
 
 Cannot be reused for commercial product without agreement.
-Please, contact us at <info@mchobby.be> 
+Please, contact us at <info@mchobby.be>
 
 ------------------------------------------------------------------------
 History:
@@ -19,47 +19,47 @@ History:
 from pypcl import *
 from pypcl import HpPclDocument
 
-PRINTER_IP = '192.168.1.206'
+PRINTER_IP = "192.168.1.206"
 PRINTER_PORT = 9100
-PRINTER_ENCODING = 'cp850'
+PRINTER_ENCODING = "cp850"
 
 
 def print_font_demo(printer_socket):
-    """ Generate the PCL document printing a same line with various 
+    """Generate the PCL document printing a same line with various
             font and styles.
 
-            === PAY ATTENTION === 
+            === PAY ATTENTION ===
             The way the printer will act with various commands and print
             depend on the selected font (the font kind), the printer model
             and the parameters (not all the parameters works for a font).
 
             You will find many documentation in the "PCL 5 Printer Language
-            Technical Reference Manual", Ch 8: PCL Font Selection 
+            Technical Reference Manual", Ch 8: PCL Font Selection
 
     parameters:
             printer_socket : tuple (PRINTER_IP, PRINTER_PORT). On which
                                              socket to print.
     """
 
-    print('Font demo')
-    print('---------')
-    print('Printer IP: %s\nPrinter Port: %i' % printer_socket)
+    print("Font demo")
+    print("---------")
+    print("Printer IP: %s\nPrinter Port: %i" % printer_socket)
     medium = PrinterSocketAdapter(printer_socket)
 
-    d = HpPclDocument('cp850', medium)
+    d = HpPclDocument("cp850", medium)
     d.reset_printer()  # PCL to reset the printer
     # Set the default paper source to Tray + eject current page if any.
     d.paper_source()
 
-    d.pitch(12)     # Set 12 cpi size characters
+    d.pitch(12)  # Set 12 cpi size characters
     d.bold()
-    d.writeln(u'Here an exemple of font assignment')
+    d.writeln("Here an exemple of font assignment")
     d.writeln()
     d.bold(False)
 
     # Follow this sequence of characteristic when assigning a font
     #  1) Symbol set      (eg: ASCII)
-#  2) Spacing         (eg: Fixed)
+    #  2) Spacing         (eg: Fixed)
     #  3) Pitch           (eg: 16.66)
     #  4) Height          (eg: 8.5 point)
     #  5) Style           (eg: Upright)
@@ -71,14 +71,15 @@ def print_font_demo(printer_socket):
         d.spacing()  # Set fixed
         d.pitch(16.66)
         d.height(8.5)
-        d.style('upright')
+        d.style("upright")
         # d.style( 'italic' )
 
         # You can use set bold for easier bold switch on/off
-        d.stroke_weight('text')
+        d.stroke_weight("text")
         d.typeface_familly(typeface_name)
         d.writeln(
-            u'Printing abcdef.klmnopq ABC ITC.GAU with %s typeface' % typeface_name)
+            "Printing abcdef.klmnopq ABC ITC.GAU with %s typeface" % typeface_name
+        )
 
     medium.open()  # Open the media for transmission
     try:
@@ -86,9 +87,9 @@ def print_font_demo(printer_socket):
     finally:
         medium.close()
 
-    del (d)
-    del (medium)
+    del d
+    del medium
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_font_demo((PRINTER_IP, PRINTER_PORT))
