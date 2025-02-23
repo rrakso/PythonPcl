@@ -8,9 +8,10 @@ Copyright 2024 Oskar Jaskólski <oskarrro90@gmail.com>
 Licence: CC-BY-SA-NC
 """
 
-from . import *
 import usb.core
 import usb.util
+
+from . import *
 
 
 class PrinterUsbAdapter(PrinterAdapter):
@@ -56,9 +57,12 @@ class PrinterUsbAdapter(PrinterAdapter):
         self.idVendor = self.device.idVendor
         self.idProduct = self.device.idProduct
 
+        # Detach kernel driver if needed
+        if self.device.is_kernel_driver_active(0):
+            self.device.detach_kernel_driver(0)
+
         try:
             self.device.set_configuration()
-            self.device.reset()
         except usb.core.USBError as e:
             print("Could not set configuration: {0}".format(str(e)))
 
