@@ -188,7 +188,7 @@ class ZplDocument(PclDocument):
             origin) == 2, "origin must be a tuple (x-dots,y-dots)"
         assert isinstance(origin[0], int) and isinstance(
             origin[1], int), "origin must contains integers values"
-        assert isinstance(data, str), "Data must be unicode string"
+        assert isinstance(data, str), "Data must be string"
         assert isinstance(height_dots, int), "height_dots must be an interger"
 
         self.field_origin(origin)
@@ -203,7 +203,7 @@ class ZplDocument(PclDocument):
             origin) == 2, "origin must be a tuple (x-dots,y-dots)"
         assert isinstance(origin[0], int) and isinstance(
             origin[1], int), "origin must contains integers values"
-        assert isinstance(data, str), "Data must be unicode string"
+        assert isinstance(data, str), "Data must be string"
         assert isinstance(
             magnification, int), "height_dots must be an interger"
 
@@ -219,7 +219,7 @@ class ZplDocument(PclDocument):
             origin) == 2, "origin must be a tuple (x-dots,y-dots)"
         assert isinstance(origin[0], int) and isinstance(
             origin[1], int), "origin must contains integers values"
-        assert isinstance(ean, str), "Data must be unicode string"
+        assert isinstance(ean, str), "Data must be string"
         assert (len(ean) == 13) and (
             ean.isdigit()), "ean must have 13 digits only"
         assert isinstance(height_dots, int), "height_dots must be an integer"
@@ -333,7 +333,7 @@ class ZplDocument(PclDocument):
 
         return (font_code, font_orientation, font_height_dots, font_width_dots)
 
-    def useNewFont(self, newFontCode, fontName):
+    def use_new_font(self, newFontCode, fontName):
         """ Writes a command that sets new font, until printer will be turnded off. 
         Example command: ^CWQ,E:TT0003M_.FNT"""
         assert isinstance(newFontCode, str), "font code must be str"
@@ -345,7 +345,7 @@ class ZplDocument(PclDocument):
     def field_data(self, data):
         """ just send the data of the field. Should be followed by field
         separator """
-        assert isinstance(data, str), 'Data must be unicode string'
+        assert isinstance(data, str), 'Data must be string'
 
         self.writeln(u'^FD%s' % data)
 

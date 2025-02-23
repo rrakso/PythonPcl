@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-# import everything from pypcl.py
-from .pypcl import *
-from .toolbox import *
-from .hppcl import HpPclDocument
-from .hpcode39 import Barcode39
-from .zpl import ZplDocument
-from .adserial import PrinterSerialAdapter
-from .adsocket import PrinterSocketAdapter
-from .adcups import PrinterCupsAdapter
-from .exceptions import *
-from .adusb import PrinterUsbAdapter
+# import everything from pypcl.py 
+from pypcl.pypcl import *
+from pypcl.toolbox import *
+from pypcl.exceptions import *
+from pypcl.hppcl import HpPclDocument
+from pypcl.hpcode39 import Barcode39
+from pypcl.zpl import ZplDocument
+from pypcl.adserial import PrinterSerialAdapter
+from pypcl.adsocket import PrinterSocketAdapter
+from pypcl.adcups import PrinterCupsAdapter
+from pypcl.adusb import PrinterUsbAdapter
